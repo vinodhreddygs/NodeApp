@@ -1,7 +1,8 @@
 import { Router } from 'express'
-import user from './user'
+//import user from './user'
 import auth from './auth'
 import book from './book'
+import users from './users'
 
 const router = new Router()
 
@@ -28,8 +29,9 @@ const router = new Router()
  * @apiParam {String[]} [sort=-createdAt] Order of returned items.
  * @apiParam {String[]} [fields] Fields to be returned.
  */
-router.use('/users', user)
+//router.use('/users', user)
 router.use('/auth', auth)
 router.use('/books', book)
+router.use('/users', users)
 
 export default router
