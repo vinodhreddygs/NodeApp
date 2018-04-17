@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { create, index, show, update, destroy } from './controller'
+import { token } from '../../services/passport'
 
 const router = new Router()
 
@@ -13,6 +14,7 @@ const router = new Router()
  * @apiError 404 Users not found.
  */
 router.post('/',
+token({ required: true }),
   create)
 
 /**
@@ -24,7 +26,7 @@ router.post('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
 router.get('/',
-  query(),
+  token({ required: true }),
   index)
 
 /**

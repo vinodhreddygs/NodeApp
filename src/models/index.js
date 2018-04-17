@@ -58,5 +58,18 @@ db.user_passwords.hook('beforeCreate', function (passEntry) {
     .catch();
 })
 
+//password authentication
+db.user_passwords.authenticate=function(password,passEntry){
+  console.log("In here",password,passEntry);
+  return bcrypt.compare(password, passEntry.Password)
+  .then(function(valid){  
+    console.log("validity",valid)  
+     return valid ? passEntry : false;
+  })
+  .catch((err)=>{
+    console.log(err)
+  })
+ }
+
 // export connection
 module.exports = db;

@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
+import { token } from '../../services/passport'// have to import to use token
 import { create, index, show, update, destroy, getByTitle, getByIdTitle } from './controller'
 
 const router = new Router()
@@ -13,6 +14,7 @@ const router = new Router()
  * @apiError 404 Book not found.
  */
 router.post('/',
+  token({ required: true }),//import token and use
   create)
 
 /**
@@ -24,7 +26,7 @@ router.post('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
 router.get('/',
-  query(),
+  token({ required: true }),
   index)
 
 /**
@@ -36,30 +38,31 @@ router.get('/',
  * @apiError 404 Book not found.
  */
 router.get('/:bookId',
+  token({ required: true }),
   show)
 
-  /**
- * @api {get} /books/:id Retrieve book by title
- * @apiName RetrieveBook
- * @apiGroup Book
- * @apiSuccess {Object} book Book's data.
- * @apiError {Object} 400 Some parameters may contain invalid values.
- * @apiError 404 Book not found.
- */
+/**
+* @api {get} /books/:id Retrieve book by title
+* @apiName RetrieveBook
+* @apiGroup Book
+* @apiSuccess {Object} book Book's data.
+* @apiError {Object} 400 Some parameters may contain invalid values.
+* @apiError 404 Book not found.
+*/
 router.get('/title/:bookTitle',
-getByTitle)
+  getByTitle)
 
 
-  /**
- * @api {get} /books/:id Retrieve book by Id and title
- * @apiName RetrieveBook
- * @apiGroup Book
- * @apiSuccess {Object} book Book's data.
- * @apiError {Object} 400 Some parameters may contain invalid values.
- * @apiError 404 Book not found.
- */
+/**
+* @api {get} /books/:id Retrieve book by Id and title
+* @apiName RetrieveBook
+* @apiGroup Book
+* @apiSuccess {Object} book Book's data.
+* @apiError {Object} 400 Some parameters may contain invalid values.
+* @apiError 404 Book not found.
+*/
 router.get('/id/:bookId/title/:bookTitle',
-getByIdTitle)
+  getByIdTitle)
 
 
 /**
@@ -71,6 +74,7 @@ getByIdTitle)
  * @apiError 404 Book not found.
  */
 router.put('/:bookId',
+  token({ required: true }),
   update)
 
 /**
@@ -81,6 +85,7 @@ router.put('/:bookId',
  * @apiError 404 Book not found.
  */
 router.delete('/:bookId',
+  token({ required: true }),
   destroy)
 
 export default router

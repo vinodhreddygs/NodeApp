@@ -2,6 +2,7 @@
 var fs = require('fs');
 var path = require('path');
 var Model = require('../../models');
+import api_books from '../../model_fns/api_books'
 
 export const create = (req, res, next) => {
   /* fs.readFile(path.join(path.resolve('.'), 'src', 'data.json'), 'utf8', (err, data) => {
@@ -16,14 +17,15 @@ export const create = (req, res, next) => {
        res.status(200).json(parsedData).end();
      });
    }); */
-// var unique_user_Id
-  Model.books.create({    
-    title: req.body.title,
-    author: req.body.author,
-    publisher: req.body.publisher,
-    price: req.body.price
-
-  })
+  // var unique_user_Id
+  /* Model.books.create({    
+     title: req.body.title,
+     author: req.body.author,
+     publisher: req.body.publisher,
+     price: req.body.price
+ 
+   }) */
+  api_books.create(req.body)
     .then((books) => {
       books = books.get({ plain: true });//to get data object not in sequilize obj in console
       // console.log("books", books);
@@ -36,7 +38,7 @@ export const create = (req, res, next) => {
 }
 
 
-export const index = ({ querymen: { query, select, cursor } }, res, next) => {
+export const index = (req, res, next) => {
   /* fs.readFile(path.join(path.resolve('.'), 'src', 'data.json'), 'utf8', (err, data) => {
      //console.log("data", data);
      if (err) res.status(400).end();
@@ -45,10 +47,7 @@ export const index = ({ querymen: { query, select, cursor } }, res, next) => {
      res.status(200).json(parsedData).end();  */
   // });Model.findAll({
   //console.log("model",Model);
-  Model.books.findAll({
-    raw: true, //to get data object not sequilize obj while create use plain
-    attributes: ['id', 'title', 'author', 'publisher', 'price']
-  })
+  api_books.getAllBooks()
     .then((books) => {
       //console.log("books",books);
       res.status(200).json(books).end();
@@ -83,16 +82,10 @@ export const show = (req, res, next) => {
   //     if (err) res.status(400).end();
   //     res.status(200).json(matchedItem).end();
   //   });
-  Model.books.find({
-    raw: true, //to get data object not sequilize obj while create use plain
-    attributes: ['id', 'title', 'author', 'publisher', 'price'],
-    where: {
-      id: req.params.bookId
-    }
-  })
-    .then((books) => {
+  api_books.getBookById(req.params.bookId)
+    .then((book) => {
       //console.log("books",books);
-      res.status(200).json(books).end();
+      res.status(200).json(book).end();
     })
     .catch((err) => {
       //console.log("Catch block", err);
@@ -200,16 +193,19 @@ export const update = (req, res, next) => {
   //     console.log("Catch block", err);
   //     if (err) res.status(400).end();
   //   })
-  Model.books.update({
-    title: req.body.title,
-    author: req.body.author,
-    publisher: req.body.publisher,
-    price: req.body.price,
-  }, {
-      where: {
-        id: req.params.bookId
-      }
-    })
+  /*  Model.books.update({
+      title: req.body.title,
+      author: req.body.author,
+      publisher: req.body.publisher,
+      price: req.body.price,
+    }, {
+        where: {
+          id: req.params.bookId
+        }
+      }) */
+
+      console.log("before",req.body);
+  api_books.update(req.body, req.params.bookId)
     .then((books) => {
       console.log("books", books);
       res.status(200).json(books).end();
@@ -243,12 +239,13 @@ export const destroy = (req, res, next) => {
       });
     }); */
 
-  Model.books.destroy({
-    
-    where: {
-      id: req.params.bookId
-    }
-  })
+  /* Model.books.destroy({
+ 
+     where: {
+       id: req.params.bookId
+     }
+   }) */
+  api_books.delete(req.params.bookId)
     .then((books) => {
       //console.log("books",books);
       res.status(200).json(books).end();
